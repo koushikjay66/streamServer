@@ -35,8 +35,22 @@ public class Threads implements Runnable {
 
     @Override
     public void run() {
-        readInput();
-        generateHeader();
+        /*
+            The first thing run object does is calling the readInput Method . readInput returns a string 
+            containg all the reqested head. 
+        */
+        String h=readInput();
+        Parser p = new Parser(h);
+        p.parse();
+        FileOperation fp = new FileOperation(p);
+        p = null;
+        
+        if(fp.check()){
+            fp.stream(s);
+        }else{
+            System.out.println("Invalid FileName");
+        }
+       // generateHeader();
     }// End of method run
 
     private String readInput() {
@@ -51,24 +65,8 @@ public class Threads implements Runnable {
                 Logger.getLogger(Threads.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        System.out.println(h);
+       // System.out.println(h);
         return h;
     }// End of method readInput
-
-    private void generateHeader() {
-        String content = "getAll the things wyou ";
-        
-        
-        try {
-            byte [] f=Files.readAllBytes(new File("http://doridro.net/file/ILK17VFY/0c0e3e0defc3abda0ac870e4e4758e49/Bappa%20-%20Pori.mp3").toPath());
-            String head = "HTTP/1.1 200 OK\r\nContent-Type: audio/mpeg\r\nContent-Length:" + f.length+ "\r\n\r\n";
-            
-            s.getOutputStream().write(head.getBytes());
-            s.getOutputStream().write(f);
-            s.close();
-        } catch (Exception e) {
-
-        }
-    }
 
 }// End of class threads
